@@ -80,6 +80,53 @@ async function start() {
   anchor.onTargetFound = () => setStatus("Estampa reconhecida!", true);
   anchor.onTargetLost = () => setStatus("Aponte a câmera para a estampa", false);
 
+  // Rotação manual por arrasto — pausa o autoRotate enquanto o dedo estiver
+  // na tela e por um tempo depois de soltar (ver autoRotateResumeDelay).
+  let activePointerId = null;
+  let lastPointerX = 0;
+  let lastPointerY = 0;
+  let lastInteractionTime = -Infinity;
+
+  if (CONFIG.dragRotateEnabled) {
+    const dragTarget = document.querySelector("#ar-container");
+    dragTarget.style.touchAction = "none";
+
+    dragTarget.addEventListener("pointerdown", (e) => {
+      if (activePointerId !== null) return;
+      activePointerId = e.pointerId;
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+      dragTarget.setPointerCapture(e.pointerId);
+    });
+
+    dragTarget.addEventListener("pointermove", (e) => {
+      if (e.pointerId !== activePointerId) return;
+
+      const deltaX = e.clientX - lastPointerX;
+      const deltaY = e.clientY - lastPointerY;
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+
+      modelGroup.rotation.y += deltaX * CONFIG.dragRotateSpeed;
+
+      if (CONFIG.dragRotateVertical) {
+        const nextRotationX = modelGroup.rotation.x + deltaY * CONFIG.dragRotateSpeed;
+        modelGroup.rotation.x = Math.max(
+          -CONFIG.dragRotateVerticalLimit,
+          Math.min(CONFIG.dragRotateVerticalLimit, nextRotationX)
+        );
+      }
+    });
+
+    const endDrag = (e) => {
+      if (e.pointerId !== activePointerId) return;
+      activePointerId = null;
+      lastInteractionTime = performance.now();
+    };
+    dragTarget.addEventListener("pointerup", endDrag);
+    dragTarget.addEventListener("pointercancel", endDrag);
+  }
+
   await mindarThree.start();
 
   const clock = new THREE.Clock();
@@ -87,7 +134,11 @@ async function start() {
   renderer.setAnimationLoop(() => {
     const delta = clock.getDelta();
 
-    if (CONFIG.autoRotate) {
+    const isDragging = activePointerId !== null;
+    const idleLongEnough =
+      performance.now() - lastInteractionTime > CONFIG.autoRotateResumeDelay * 1000;
+
+    if (CONFIG.autoRotate && !isDragging && idleLongEnough) {
       modelGroup.rotation.y += CONFIG.autoRotateSpeed * delta;
     }
 

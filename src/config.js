@@ -30,6 +30,16 @@ export const CONFIG = {
   autoRotate: true,
   autoRotateSpeed: 0.6, // radianos por segundo
 
+  // Permite arrastar o dedo na tela pra girar o modelo manualmente.
+  dragRotateEnabled: true,
+  dragRotateSpeed: 0.005, // radianos por pixel arrastado
+  dragRotateVertical: true, // se true, arrastar na vertical também inclina no eixo X
+  dragRotateVerticalLimit: Math.PI / 3, // limite de inclinação no eixo X (evita virar de cabeça pra baixo)
+
+  // Depois de soltar o dedo, espera esse tempo (segundos) sem interação antes
+  // de retomar o autoRotate.
+  autoRotateResumeDelay: 2.5,
+
   // Se o .glb tiver animação embutida (glTF animation clips), ela toca
   // automaticamente em loop além da autoRotate acima.
   playEmbeddedAnimation: true,
