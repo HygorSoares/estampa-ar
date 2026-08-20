@@ -22,6 +22,8 @@ async function start() {
   const mindarThree = new MindARThree({
     container: document.querySelector("#ar-container"),
     imageTargetSrc: CONFIG.markerPath,
+    filterMinCF: CONFIG.filterMinCF,
+    filterBeta: CONFIG.filterBeta,
   });
 
   const { renderer, scene, camera } = mindarThree;

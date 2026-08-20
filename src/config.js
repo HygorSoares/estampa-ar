@@ -12,6 +12,14 @@ export const CONFIG = {
   // Caminho do modelo 3D (.glb) — troque pelo arquivo exportado da IA
   modelPath: "./assets/model/model.glb",
 
+  // Suavização do rastreamento do marcador (filtro tipo "One Euro Filter").
+  // O MindAR usa esses valores por padrão: filterMinCF: 0.001, filterBeta: 1000
+  // — priorizam resposta rápida, mas deixam o modelo "tremendo" (vibrato)
+  // quando a câmera/estampa fica parada. Valores menores = mais suave, porém
+  // com um pouco mais de atraso ao mover a câmera rápido.
+  filterMinCF: 0.0001, // menor = mais suavização quando parado
+  filterBeta: 100, // menor = mais suavização, com mais atraso em movimentos rápidos
+
   // Escala do modelo sobre o marcador. O marcador equivale a um quadrado de
   // tamanho 1 no espaço 3D do MindAR — comece pequeno (0.1–0.3) e ajuste.
   scale: 0.2,
