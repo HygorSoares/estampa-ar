@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Estampa AR</title>
+  <style>
+    /* Reset básico — o MindAR cria seu próprio <video> e <canvas>
+       full-screen dentro do #ar-container, então mantemos tudo sem margens. */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    #ar-container {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Tela de status/erro simples — some assim que o AR inicia */
+    #status {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      padding: 16px;
+      color: #fff;
+      background: rgba(0,0,0,0.6);
+      font-size: 14px;
+      text-align: center;
+      pointer-events: none;
+    }
+    #status.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <div id="status">Carregando experiência AR… aponte a câmera para a estampa</div>
+  <div id="ar-container"></div>
+
+  <!-- Importmap: resolve os pacotes usados nos módulos ES abaixo.
+       three.js e MindAR são carregados via CDN, sem precisar de build/bundler. -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+      "mindar-image-three": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+    }
+  }
+  </script>
+
+  <script type="module" src="./src/main.js"></script>
+
+</body>
+</html>
