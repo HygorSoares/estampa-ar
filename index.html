@@ -18,6 +18,21 @@
     #ar-container {
       width: 100vw;
       height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* O MindAR cria o <video> da câmera com z-index: -2 inline e o <canvas>
+       do three.js sem z-index (auto). Forçamos aqui uma ordem explícita e um
+       fundo transparente no canvas — em alguns navegadores mobile o
+       compositor não respeita o alpha:true do WebGL sem essa declaração
+       explícita, e o resultado é um fundo preto sólido atrás do modelo. */
+    #ar-container video {
+      z-index: 1 !important;
+    }
+    #ar-container canvas {
+      z-index: 2 !important;
+      background: transparent !important;
     }
 
     /* Tela de status/erro simples — some assim que o AR inicia */

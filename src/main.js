@@ -26,6 +26,11 @@ async function start() {
 
   const { renderer, scene, camera } = mindarThree;
 
+  // Garante fundo transparente (alguns navegadores mobile não respeitam
+  // corretamente o alpha:true do WebGL sem isso, resultando em fundo preto
+  // sólido em vez do vídeo da câmera aparecendo atrás do modelo).
+  renderer.setClearColor(0x000000, 0);
+
   // Luz — sem isso o modelo pode aparecer totalmente escuro
   const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
